@@ -1,0 +1,6 @@
+{
+  "name": "Movie Hub",
+  "description": "Discover and explore movies with real-time OMDb search, detailed plots, cast info, ratings, and watchlist curation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
