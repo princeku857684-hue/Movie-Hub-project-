@@ -177,6 +177,50 @@ export const Navbar: React.FC<NavbarProps> = ({
           </form>
         </div>
       )}
+      {/* Mobile Navigation bar */}
+      <div className="md:hidden flex items-center justify-around border-t border-white/5 bg-neutral-950/95 py-2 px-3 text-xs">
+        <button
+          onClick={() => setCurrentTab('home')}
+          className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg ${
+            currentTab === 'home' ? 'text-amber-400 font-bold' : 'text-neutral-400'
+          }`}
+        >
+          <Compass className="h-4 w-4" />
+          <span>Explore</span>
+        </button>
+        <button
+          onClick={() => setCurrentTab('movies')}
+          className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg ${
+            currentTab === 'movies' ? 'text-amber-400 font-bold' : 'text-neutral-400'
+          }`}
+        >
+          <Film className="h-4 w-4" />
+          <span>Movies</span>
+        </button>
+        <button
+          onClick={() => setCurrentTab('tv')}
+          className={`flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg ${
+            currentTab === 'tv' ? 'text-amber-400 font-bold' : 'text-neutral-400'
+          }`}
+        >
+          <Tv className="h-4 w-4" />
+          <span>Series</span>
+        </button>
+        <button
+          onClick={() => setCurrentTab('watchlist')}
+          className={`relative flex flex-col items-center gap-1 py-1 px-2.5 rounded-lg ${
+            currentTab === 'watchlist' ? 'text-amber-400 font-bold' : 'text-neutral-400'
+          }`}
+        >
+          <Bookmark className="h-4 w-4" />
+          <span>Watchlist</span>
+          {watchlistCount > 0 && (
+            <span className="absolute -top-1 right-2 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-amber-500 text-[9px] font-bold text-neutral-950">
+              {watchlistCount}
+            </span>
+          )}
+        </button>
+      </div>
     </header>
   );
 };

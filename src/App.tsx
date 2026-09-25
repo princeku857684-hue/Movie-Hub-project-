@@ -24,7 +24,15 @@ import { SearchBar } from './components/SearchBar';
 import { MovieCard } from './components/MovieCard';
 import { MovieDetailsView } from './components/MovieDetailsView';
 import { WatchlistView } from './components/WatchlistView';
-import { searchMovies, getMovieDetails, CURATED_LISTS } from './services/omdb';
+import {
+  searchMovies,
+  getMovieDetails,
+  FALLBACK_HERO_MOVIE,
+  FALLBACK_TRENDING,
+  FALLBACK_POPULAR,
+  FALLBACK_SERIES,
+  FALLBACK_SCIFI,
+} from './services/omdb';
 import { MovieItem, MovieDetails, FilterType, SortOption } from './types';
 
 const STORAGE_KEY_WATCHLIST = 'cineflux_watchlist_v1';
@@ -103,41 +111,20 @@ export default function App() {
     let isMounted = true;
     async function loadCatalog() {
       setLoadingCurated(true);
+      // Immediately set robust fallback datasets to prevent layout shifts or empty states
+      setHeroMovie(FALLBACK_HERO_MOVIE);
+      setTrendingMovies(FALLBACK_TRENDING);
+      setPopularMovies(FALLBACK_POPULAR);
+      setTopSeries(FALLBACK_SERIES);
+      setSciFiMovies(FALLBACK_SCIFI);
+
       try {
-        // Hero movie (Oppenheimer)
         const hero = await getMovieDetails('tt15398776');
-        if (hero && isMounted) setHeroMovie(hero);
-
-        // Fetch curated lists in parallel
-        const fetchList = async (ids: string[]) => {
-          const promises = ids.map((id) => getMovieDetails(id));
-          const results = await Promise.all(promises);
-          return results
-            .filter((m): m is MovieDetails => m !== null && m.Response === 'True')
-            .map((m) => ({
-              Title: m.Title,
-              Year: m.Year,
-              imdbID: m.imdbID,
-              Type: m.Type,
-              Poster: m.Poster,
-            }));
-        };
-
-        const [trending, popular, series, sciFi] = await Promise.all([
-          fetchList(CURATED_LISTS.trending),
-          fetchList(CURATED_LISTS.popularMovies),
-          fetchList(CURATED_LISTS.topSeries),
-          fetchList(CURATED_LISTS.sciFiCinema),
-        ]);
-
-        if (isMounted) {
-          setTrendingMovies(trending);
-          setPopularMovies(popular);
-          setTopSeries(series);
-          setSciFiMovies(sciFi);
+        if (hero && isMounted) {
+          setHeroMovie(hero);
         }
       } catch (err) {
-        console.error('Failed to fetch curated lists:', err);
+        console.warn('Using cached fallback catalog:', err);
       } finally {
         if (isMounted) setLoadingCurated(false);
       }
